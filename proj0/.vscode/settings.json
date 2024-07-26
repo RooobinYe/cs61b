@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/yezhenrong/Documents/VScode/Java/cs61b/library-sp24/**/*.jar"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
+}
