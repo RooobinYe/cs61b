@@ -1,7 +1,5 @@
 package deque;
 
-import afu.org.checkerframework.checker.igj.qual.I;
-
 public class LinkedListDeque<T> {
     public class List<T> {
         private T item;
