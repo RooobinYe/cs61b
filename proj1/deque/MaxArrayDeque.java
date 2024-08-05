@@ -25,7 +25,7 @@ public class MaxArrayDeque<T> { // 正确的方法应该是继承来写
         this.size = 0;
     }
 
-    public MaxArrayDeque(Comparator<T> c){
+    public MaxArrayDeque(Comparator<T> c) {
         this.items = (T[]) new Object[8];
         this.nextFirst = 0;
         this.nextLast = 1;
@@ -33,7 +33,7 @@ public class MaxArrayDeque<T> { // 正确的方法应该是继承来写
         this.comparator = c;
     }
 
-    public T max(){
+    public T max() {
         if (isEmpty()) {
             return null;
         }
@@ -48,13 +48,13 @@ public class MaxArrayDeque<T> { // 正确的方法应该是继承来写
     }
 
     public T max(Comparator<T> c) {
-        if (isEmpty()){
+        if (isEmpty()) {
             return null;
         }
         T maxVal = get(0);
-        for(int i = 1; i < size(); i++) {
+        for (int i = 1; i < size(); i++) {
             T thisVal = get(i);
-            if (c.compare(maxVal, thisVal) < 0){
+            if (c.compare(maxVal, thisVal) < 0) {
                 maxVal = thisVal;
             }
         }
@@ -88,7 +88,7 @@ public class MaxArrayDeque<T> { // 正确的方法应该是继承来写
             if (items.length >= 16 && size <= Math.round(items.length / 4.0)) {
                 deque.MaxArrayDeque<T> p = new deque.MaxArrayDeque<>(Math.round(items.length / 4));
                 int length = size;
-                for(int i = 0; i < length; i++){
+                for (int i = 0; i < length; i++) {
                     p.addLast(items[getFirst()]);
                     removeFirst();
                 }

@@ -1,6 +1,7 @@
 package gh2;
 
 // TODO: uncomment the following import once you're ready to start this portion
+
 import deque.Deque;
 import deque.ArrayDeque;
 import org.checkerframework.checker.units.qual.A;
@@ -21,8 +22,8 @@ public class GuitarString {
 
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {
-        buffer = new ArrayDeque<>((int)Math.round(SR / frequency));
-        for(int i = 0; i < (int)Math.round(SR / frequency); i++) {
+        buffer = new ArrayDeque<>();
+        for (int i = 0; i < (int) Math.round(SR / frequency); i++) {
             buffer.addLast(0.0);
         }
         // TODO: Create a buffer with capacity = SR / frequency. You'll need to
@@ -34,7 +35,7 @@ public class GuitarString {
 
     /* Pluck the guitar string by replacing the buffer with white noise. */
     public void pluck() {
-        for (int i = 0; i < buffer.size(); i++){
+        for (int i = 0; i < buffer.size(); i++) {
             buffer.removeFirst();
             buffer.addLast(Math.random() - 0.5);
         }
@@ -52,9 +53,9 @@ public class GuitarString {
      * the Karplus-Strong algorithm.
      */
     public void tic() {
-        double first = buffer.getFirst();
+        double first = buffer.get(0);
         buffer.removeFirst();
-        double second = buffer.getFirst();
+        double second = buffer.get(0);
         buffer.addLast(DECAY * (first + second) * 0.5);
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
@@ -64,7 +65,7 @@ public class GuitarString {
     /* Return the double at the front of the buffer. */
     public double sample() {
         // TODO: Return the correct thing.
-        return buffer.getFirst();
+        return buffer.get(0);
     }
 }
 // TODO: Remove all comments that say TODO when you're done.

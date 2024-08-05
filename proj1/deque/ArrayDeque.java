@@ -1,6 +1,15 @@
 package deque;
 
+import java.util.SplittableRandom;
+
 public class ArrayDeque<T> {
+    private static final int INIT_ITEMS = 8;
+    private static final int INIT_NEXTFIRST = 0;
+    private static final int INIT_NEXTLAST = 1;
+    private static final int INIT_SIZE = 0;
+    private static final int ENLARGE_RATE = 2000;
+    private static final double SHRINK_RATE = 0.25;
+
     private int size;
     private int nextFirst;
     private int nextLast;
@@ -8,10 +17,10 @@ public class ArrayDeque<T> {
 
     /* Create an empty array. */
     public ArrayDeque() {
-        this.items = (T[]) new Object[8];
-        this.nextFirst = 0;
-        this.nextLast = 1;
-        this.size = 0;
+        this.items = (T[]) new Object[INIT_ITEMS];
+        this.nextFirst = INIT_NEXTFIRST;
+        this.nextLast = INIT_NEXTLAST;
+        this.size = INIT_SIZE;
     }
 
     /* Create an array with size. */
@@ -22,23 +31,27 @@ public class ArrayDeque<T> {
         this.size = 0;
     }
 
+    public void equal(ArrayDeque<T> p) {
+        items = p.items;
+        nextFirst = p.nextFirst;
+        nextLast = p.nextLast;
+        size = p.size;
+    }
+
     /* Should process the array. Using in add items. */
     // System.arraycopy
     public void enlargeArray() {
         if (size != 0) {
             if (size == items.length) {
-                ArrayDeque<T> p = new ArrayDeque<>(size * 2);
+                ArrayDeque<T> p = new ArrayDeque<>(size * ENLARGE_RATE);
                 int length = size; // For fix size
-//                T[] p = (T[]) new Object[size * 2];
                 for (int i = 0; i < length; i++) {
                     p.addLast(items[getFirst()]);
                     removeFirst();
                 }
+//                T[] p = (T[]) new Object[size * 2];
 //                System.arraycopy(items, 0, p, 0, size);
-                items = p.items;
-                nextFirst = p.nextFirst;
-                nextLast = p.nextLast;
-                size = p.size;
+                equal(p);
             }
         }
     }
@@ -46,19 +59,27 @@ public class ArrayDeque<T> {
     /* Should process the array. Using in remove items. */
     public void shrinkArray() {
         if (size != 0) {
-            if (items.length >= 16 && size <= Math.round(items.length / 4.0)) {
-                ArrayDeque<T> p = new ArrayDeque<>(Math.round(items.length / 4));
+            if (items.length >= 16 && size <= Math.round(items.length * SHRINK_RATE)) {
+                ArrayDeque<T> p = new ArrayDeque<>((int)Math.round(items.length * SHRINK_RATE));
                 int length = size;
-                for(int i = 0; i < length; i++){
+                for (int i = 0; i < length; i++) {
                     p.addLast(items[getFirst()]);
-                    removeFirst();
+                    // remove items first
+                    // so ugly so bad, not elegant at all
+                    size -= 1;
+                    int first;
+                    if (nextFirst == items.length - 1) {
+                        first = 0;
+                    } else {
+                        first = nextFirst + 1;
+                    }
+                    T firstItem = items[first];
+                    items[first] = null;
+                    nextFirst = first;
                 }
 //                T[] p = (T[]) new Object[items.length / 4];
 //                System.arraycopy(items, 0, p, 0, size);
-                items = p.items;
-                nextFirst = p.nextFirst;
-                nextLast = p.nextLast;
-                size = p.size;
+                equal(p);
             }
         }
     }
