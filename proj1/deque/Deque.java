@@ -20,8 +20,4 @@ public interface Deque<T> {
     T removeLast();
 
     T get(int index);
-
-    boolean equals(Object o);
-
-    Iterator<T> iterator();
 }

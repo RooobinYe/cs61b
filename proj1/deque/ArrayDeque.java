@@ -2,7 +2,7 @@ package deque;
 
 import java.util.SplittableRandom;
 
-public class ArrayDeque<T> {
+public class ArrayDeque<T> implements Deque<T> {
     private static final int INIT_ITEMS = 8;
     private static final int INIT_NEXTFIRST = 0;
     private static final int INIT_NEXTLAST = 1;
