@@ -1,26 +1,42 @@
 # Gitlet Design Document
 
-**Name**:
+**Name**: RobinYe
 
 ## Classes and Data Structures
 
-### Class 1
+### Main Class
 
 #### Fields
 
 1. Field 1
 2. Field 2
 
-
-### Class 2
+### Commit Class
 
 #### Fields
 
 1. Field 1
 2. Field 2
 
+### Repository Class
+
+#### Fields
+
+1. Field 1
+2. Field 2
+
+### Utils Class
 
 ## Algorithms
 
+// TODO
+
 ## Persistence
 
+```
+CWD
+|----.gitlet
+    |----xxx
+    |----xxx
+        |----xxx
+```
