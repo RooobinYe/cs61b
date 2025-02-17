@@ -1,8 +1,10 @@
 package gitlet;
 
 import java.io.File;
+import java.time.*;
 
 import static gitlet.Utils.*;
+
 
 // TODO: any imports you need here
 
@@ -32,17 +34,28 @@ public class Repository {
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
     /* TODO: fill in the rest of this class. */
+
+    /**
+     * Initializes a new gitlet repository.
+     * There is no return value.
+     */
     public static void init() {
-        if (GITLET_DIR.exists()) {
-            GITLET_DIR.mkdir();
-        } else {
-            System.err.println("A Gitlet version-control system already exists in the current directory.");
-        }
-        // TODO
+        if (GITLET_DIR.mkdir()) {
+        System.err.println("A Gitlet version-control system already exists in the current directory.");
+        } // Create the dir.
+
+        String hash = gitlet.Utils.sha1(GITLET_DIR);
+        ZonedDateTime zonedDateTime = Commit.convertInstantToZonedDateTime(java.time.Instant.now());
+        String initCommit = "initial commit";
+        String branch = "master";
+
+        Commit commit = new Commit(); // Create a Commit Tree.
+
+        commit.add(hash, zonedDateTime, initCommit, branch);
     }
 
     public static void add(String file) {
-
+        // TODO
     }
 
     public static void commit(String message) {
@@ -59,9 +72,7 @@ public class Repository {
         // TODO
     }
 
-    public static void global-
-
-    log() {
+    public static void globalLog() {
         // TODO
         // A useful method in Utils.
     }
@@ -83,7 +94,7 @@ public class Repository {
         // TODO
     }
 
-    public static void rm-branch(String branch) {
+    public static void rmBranch(String branch) {
         // TODO
     }
 

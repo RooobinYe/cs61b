@@ -32,14 +32,27 @@ handle `Commit` serialization and deserialization, we have the `Commit` class co
 
 #### Fields
 
-1. `static final File CWD = new File(System.getProperty("user.dir"))`
-2. `static final File CAPERS_FOLDER = Utils.join(CWD, ".gitlet")`
+1. `static final File CWD = new File(System.getProperty("user.dir"));`
+2. `static final File CAPERS_FOLDER = Utils.join(CWD, ".gitlet");`
 
 ### Commit Class
 
 #### Fields
 
-1.
+1. `static final File CWD = new File (System.getProperty("user.dir"));`
+2. `private String message;`
+3. `CommitNode Class`
+4. `private int commitVersion` which record the different versions of being added to gitlet.
+
+Use `import java.util.LinkedList` to create a Deque which is `Commit`.
+
+##### `CommitNode`
+
+In `CommitNode`, which contains `String hash`, `ZonedDateTime date`, `String message`, `String branch`.
+
+##### `Commit`
+
+`Commit` should contain all utils functions.
 
 ### Utils Class
 
@@ -50,7 +63,18 @@ handle `Commit` serialization and deserialization, we have the `Commit` class co
 ```
 CWD
 |----.gitlet
-    |----xxx
-    |----xxx
-        |----xxx
+    |----HEAD
+    |----.config
+    |----objects
+        |----sha-1
+            |----
+        |----another sha-1
+    |----refs
+        |----heads
+        |----remotes
+        |----tags
+    |----index
+        |----git added files
 ```
+
+PS: call `System.exit(0)` to exit the program.
