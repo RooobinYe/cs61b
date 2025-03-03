@@ -115,12 +115,14 @@ class Utils {
      *  creating or overwriting it as needed.  Each object in CONTENTS may be
      *  either a String or a byte array.  Throws IllegalArgumentException
      *  in case of problems. */
+    // overwrite the file
     static void writeContents(File file, Object... contents) {
         try {
             if (file.isDirectory()) {
                 throw
                     new IllegalArgumentException("cannot overwrite directory");
             }
+            file.createNewFile();
             BufferedOutputStream str =
                 new BufferedOutputStream(Files.newOutputStream(file.toPath()));
             for (Object obj : contents) {
@@ -235,5 +237,18 @@ class Utils {
     static void message(String msg, Object... args) {
         System.out.printf(msg, args);
         System.out.println();
+    }
+
+    static void addMsg(String msg) {
+        File msgFile = new File("E:\\CS\\CS61B - Data Structures\\cs61b-sp21\\proj2\\testing\\msg.txt");
+            if (!msgFile.exists()) {
+                try {
+                    msgFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            msg = readContentsAsString(msgFile) + msg;
+            writeContents(msgFile, msg);
     }
 }

@@ -1,106 +1,110 @@
 package gitlet;
 
-// TODO: any imports you need here
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import java.time.*;
-import java.util.LinkedList;
+import static gitlet.Utils.*;
 
-/**
- * Represents a gitlet commit object.
- *  TODO: It's a good idea to give a description here of what else this Class
+/** Represents a gitlet commit object.
  *  does at a high level.
  *
- * @author RobinYe
+ *  @author vv
  */
-public class Commit {
+public class Commit implements Serializable {
     /**
-     * TODO: add instance variables here.
-     * <p>
+     *
      * List all instance variables of the Commit class here with a useful
      * comment above them describing what that variable represents and how that
      * variable is used. We've provided one example for `message`.
      */
 
+    /** The message of this Commit. */
     private String message;
-    private int commitVersion;
 
+    /** The timestamp of this Commit. */
+    private Date timestamp;
 
-    public class CommitNode {
-        String hash;
-        ZonedDateTime time;
-        String message;
-        String branch;
+    private List<String> parents;
 
-        /**
-         * Constructs a CommitNode with the given parameters.
-         *
-         * @param h the unique hash representing the commit.
-         * @param t the time when the commit was made.
-         * @param m the commit message summarizing the changes.
-         * @param b the branch of the commit.
-         */
-        CommitNode(String h, ZonedDateTime t, String m, String b) {
-            this.hash = h;
-            this.time = t;
-            this.message = m;
-            this.branch = b;
+    /** The files this Commit track. */
+    // filename, blobsID
+    private HashMap<String, String> blobs;
+
+    private String id;
+
+    /**
+     * initial commit.
+     */
+    public Commit() {
+        this.message = "initial commit";
+        this.timestamp = new Date(0);
+        this.id = sha1(message, timestamp.toString());
+        this.parents = new LinkedList<>();
+        this.blobs = new HashMap<>();
+    }
+
+    public Commit(String message, List<Commit> parents, Stage stage) {
+        this.message = message;
+        this.timestamp = new Date();
+        this.parents = new ArrayList<>(2);
+        for (Commit p : parents) {
+            this.parents.add(p.getID());
         }
+        // using first parent blobs
+        this.blobs = parents.get(0).getBlobs();
+
+        for (Map.Entry<String, String> item : stage.getAdded().entrySet()) {
+            String filename = item.getKey();
+            String blobId = item.getValue();
+            blobs.put(filename, blobId);
+        }
+        for (String filename : stage.getRemoved()) {
+            blobs.remove(filename);
+        }
+
+        this.id = sha1(message, timestamp.toString(), parents.toString(), blobs.toString());
     }
 
-    /* TODO: fill in the rest of this class. */
-
-    LinkedList<CommitNode> Commit = new LinkedList<>(); // CommitNode can be ignored
-
-//    public CommitNode createCommit(String h, ZonedDateTime d, String m, String b) {
-//        return new CommitNode(h, d, m, b);
-//    }
-
-    /**
-     * Return a time with zone info.
-     *
-     * @return ZonedDateTime the time with zone info.
-     */
-    public ZonedDateTime getTime() {
-        return java.time.ZonedDateTime.now();
+    public List<String> getParents() {
+        return parents;
     }
 
-    /**
-     * Display the time.
-     * Format: week month hh:mm:ss year zone
-     *
-     * @param zoneDateTime
-     * @return
-     */
-    public ZonedDateTime displayLocalTime(ZonedDateTime zoneDateTime) {
-        return null;
+    public String getFirstParentId() {
+        if (parents.isEmpty()) {
+            return "null";
+        }
+        return parents.get(0);
     }
 
-    /**
-     * As its name. This function is used to convert time.
-     *
-     * @param instant
-     */
-    public static ZonedDateTime convertInstantToZonedDateTime(Instant instant) {
-        ZoneId zoneId = ZoneId.systemDefault();
-        return instant.atZone(zoneId);
+    public String getID() {
+        return id;
     }
 
-    /**
-     * Add CommiteNode to the Commit.
-     * Commite is a TREE.
-     *
-     * @param h hash.
-     * @param t time.
-     * @param m massage.
-     * @param b branch name
-     */
-    public void add(String h, ZonedDateTime t, String m, String b) {
-        CommitNode cn = new CommitNode(h, t, m, b);
-        Commit.add(cn);
+    public String getDateString() {
+        // Thu Nov 9 20:00:05 2017 -0800
+        DateFormat df = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        return df.format(timestamp);
     }
 
-//    public void createBranch(String branch) {
-//
-//    }
+    public String getMessage() {
+        return this.message;
+    }
 
+    public HashMap<String, String> getBlobs() {
+        return this.blobs;
+    }
+
+    public String getCommitAsString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("===\n");
+        sb.append("commit " + this.id + "\n");
+        if (parents.size() == 2) {
+            sb.append("Merge: " + parents.get(0).substring(0, 7) + " " + parents.get(1).substring(0, 7) + "\n");
+        }
+        sb.append("Date: " + this.getDateString() + "\n");
+        sb.append(this.message + "\n\n");
+        return sb.toString();
+    }
 }
